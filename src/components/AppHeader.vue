@@ -1,27 +1,29 @@
 <template>
   <header class="AppHeader">
-    <div class="AppHeader__logo">
-      <router-link to="/">IP-PN.COM</router-link>
+    <div class="container AppHeader__container">
+      <div class="AppHeader__logo">
+        <router-link to="/">IP-PN.COM</router-link>
+      </div>
+      <div class="AppHeader__search">
+        <el-input
+          v-model="searchValue"
+          style="width: 240px"
+          placeholder="Type something"
+          :prefix-icon="Search"
+        />
+      </div>
+      <ul class="AppHeader__menu">
+        <li class="AppHeader__item">
+          <router-link to="">Documentation</router-link>
+        </li>
+        <li class="AppHeader__item">
+          <router-link to="">Contacts</router-link>
+        </li>
+        <li class="AppHeader__item AppHeader__item--bold">
+          <router-link to="">Log in</router-link>
+        </li>
+      </ul>
     </div>
-    <div class="AppHeader__search">
-      <el-input
-        v-model="searchValue"
-        style="width: 240px"
-        placeholder="Type something"
-        :prefix-icon="Search"
-      />
-    </div>
-    <ul class="AppHeader__menu">
-      <li class="AppHeader__item">
-        <router-link to="">Documentation</router-link>
-      </li>
-      <li class="AppHeader__item">
-        <router-link to="">Contacts</router-link>
-      </li>
-      <li class="AppHeader__item AppHeader__item--bold">
-        <router-link to="">Log in</router-link>
-      </li>
-    </ul>
   </header>
 </template>
 
@@ -35,14 +37,15 @@ const searchValue = ref('');
 <style>
   .AppHeader {
     width: 100%;
+    padding: 24px 0;
+    background-color: #f2f0f0;
+  }
+  
+  .AppHeader__container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    max-width: 1280px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 24px 20px;
   }
 
   .AppHeader__logo a {
