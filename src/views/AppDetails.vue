@@ -29,7 +29,7 @@ if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(String(route.params.quer
   router.push('/');
 } else {
   axios.get(`http://ip-api.com/json/${String(route.params.query)}`)
-  .then((response) => details.value = Object.entries(response.data));
+    .then((response) => details.value = Object.entries(response.data));
 }
 </script>
 
