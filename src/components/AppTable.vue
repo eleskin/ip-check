@@ -51,7 +51,9 @@ const SelectionCell = ({
 }
 
 const handleClickDelete = () => {
-  emit('update:modelValue', getSearchResult(searchValue.value, data.value.filter((item) => !checkedRows.value.includes(item.id))))
+  searchValue.value = '';
+  emit('update:modelValue', getSearchResult(searchValue.value, props.modelValue.filter((item) => !checkedRows.value.includes(item.query))));
+  data.value = getSearchResult(searchValue.value, data.value)
 };
 
 const generateData = (
@@ -93,7 +95,7 @@ columns.unshift({
       }))
     const allSelected = _data.every((row) => row.checked)
     const containsChecked = _data.some((row) => row.checked)
-    checkedRows.value = _data.filter((item) => item.checked).map((item) => item.id);
+    checkedRows.value = _data.filter((item) => item.checked).map((item) => item.query);
 
     return (
       <SelectionCell
@@ -142,6 +144,7 @@ const getSearchResult = (value, rows) => generateData(columns, rows).filter((ite
 watch(() => props.modelValue, (value) => data.value = value);
 
 watch(() => searchValue.value, (value) => {
+  console.log(props.modelValue)
   data.value = getSearchResult(value, props.modelValue)
 });
 </script>
