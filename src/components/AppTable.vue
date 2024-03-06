@@ -72,13 +72,18 @@ const generateData = (
     )
   })
 
-
 const handleCopyData = (ip: string) => {
   navigator.clipboard.writeText(ip).then(function() {
   console.log('Текст успешно скопирован в буфер обмена');
 }, function(err) {
   console.error('Произошла ошибка при копировании текста: ', err);
 });
+}
+
+const handleDelete = (ip: string) => {
+  checkedRows.value = [ip];
+  handleClickDelete();
+  checkedRows.value = [];
 }
 
 const columns = [
@@ -100,7 +105,7 @@ const columns = [
           </ElButton>
           <ElButton size="small" type="danger">
             <el-icon size="size" color="color">
-              <Delete />
+              <Delete onClick={() => handleDelete(props.rowData.query)} />
             </el-icon>
           </ElButton>
           </div>
