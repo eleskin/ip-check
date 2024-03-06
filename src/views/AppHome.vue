@@ -23,12 +23,15 @@ const textareaValue = ref('');
 
 const handleFormSubmit = async () => {
 	if (!textareaValue.value.trim()) return;
+	console.log(textareaValue.value.trim())
 
 	const filteredIpList = textareaValue.value.trim().split('\n').filter((ip) => {
 		if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(ip)) {
 			alert(`Некорректный IP: ${ip}`);
 			return;
 		}
+
+		return ip;
 	});
 	
 	const result = await axios.all(filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));

@@ -27,7 +27,7 @@
 
 <script lang="tsx" setup>
 import { ref, unref, watch } from 'vue'
-import { TableV2SortOrder, ElCheckbox } from 'element-plus'
+import { TableV2SortOrder, ElButton, ElCheckbox } from 'element-plus'
 
 const searchValue = ref('');
 
@@ -73,7 +73,32 @@ const generateData = (
   })
 
 const columns = [
-  {key: 'column-0', dataKey: 'query', title: 'IP', width: 250},
+  {
+    key: 'column-0',
+    dataKey: 'query',
+    title: 'IP',
+    width: 350,
+    cellRenderer: (props: any) => {
+      console.log(props.rowData.query);
+      return (
+      <div className="AppTable__cell">
+          <span>{props.rowData.query}</span>
+          <div>
+          <ElButton size="small" type="secondary">
+            <el-icon size="size" color="color">
+              <CopyDocument />
+            </el-icon>
+          </ElButton>
+          <ElButton size="small" type="danger">
+            <el-icon size="size" color="color">
+              <Delete />
+            </el-icon>
+          </ElButton>
+          </div>
+        </div>
+      );
+    }
+  },
   {key: 'column-1', dataKey: 'country', title: 'Country', width: 250},
   {key: 'column-2', dataKey: 'city', title: 'City/Town', width: 250},
   {key: 'column-3', dataKey: 'status', title: 'Status', width: 100},
@@ -152,4 +177,10 @@ watch(() => searchValue.value, (value) => {
 .AppTable__container {
   height: 400px;
 }
+
+.AppTable__cell {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  }
 </style>
