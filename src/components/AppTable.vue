@@ -72,6 +72,15 @@ const generateData = (
     )
   })
 
+
+const handleCopyData = (ip: string) => {
+  navigator.clipboard.writeText(ip).then(function() {
+  console.log('Текст успешно скопирован в буфер обмена');
+}, function(err) {
+  console.error('Произошла ошибка при копировании текста: ', err);
+});
+}
+
 const columns = [
   {
     key: 'column-0',
@@ -84,7 +93,7 @@ const columns = [
       <div className="AppTable__cell">
           <span>{props.rowData.query}</span>
           <div>
-          <ElButton size="small" type="secondary">
+          <ElButton size="small" type="secondary" onClick={() => handleCopyData(props.rowData.query)}>
             <el-icon size="size" color="color">
               <CopyDocument />
             </el-icon>
