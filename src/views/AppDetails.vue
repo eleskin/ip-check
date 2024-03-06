@@ -2,7 +2,14 @@
   <div class="AppDetails">
     <div class="container AppDetails__container">
        <div v-for="(detail, index) of details" :key="index">
-        {{ detail[0] }}: {{ detail[1] }}
+        <el-card style="max-width: 480px">
+          <template #header>
+            <div class="card-header">
+              <span>{{ detail[0].charAt(0).toUpperCase() + detail[0].slice(1) }}</span>
+            </div>
+          </template>
+          <p>{{ detail[1] }}</p>
+        </el-card>
       </div>
     </div>
   </div>
@@ -27,4 +34,17 @@ if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(String(route.params.quer
 </script>
 
 <style>
+.AppDetails {
+  padding: 80px 0 20px 0;
+}
+
+.AppDetails__container {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.AppDetails__container {
+
+}
 </style>

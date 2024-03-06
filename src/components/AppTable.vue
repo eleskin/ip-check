@@ -109,7 +109,6 @@ columns.unshift({
 
 const data = ref(generateData(columns, props.modelValue))
 
-columns[0].sortable = true;
 columns[1].sortable = true;
 columns[2].sortable = true;
 columns[3].sortable = true;
