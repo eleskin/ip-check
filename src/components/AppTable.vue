@@ -118,6 +118,24 @@ const onSort = ({ key, order }: SortBy) => {
 watch(() => props.modelValue, (value) => {
   data.value = generateData(columns, value)
 });
+
+watch(() => searchValue.value, (value) => {
+  const getSearchResult = () => generateData(columns, props.modelValue).filter((item) => {
+    let isExistElement = false;
+
+    Object.values(item).forEach((field) => {
+      const fieldValue = String(field).toLowerCase();
+
+      if (fieldValue.indexOf(value.toLowerCase()) !== -1) {
+        isExistElement = true;
+      }
+    });
+
+    return isExistElement;
+  });
+
+  data.value = getSearchResult()
+});
 </script>
 
 <style>
