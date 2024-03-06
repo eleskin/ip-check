@@ -6,19 +6,30 @@
 				<el-button type="primary" native-type="submit">Отправить</el-button>
 			</form>
 		</div>
+		<app-table></app-table>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
+import AppTable from '@/components/AppTable.vue';
 
 const textareaValue = ref('');
 
 const handleFormSubmit = async () => {
 	const ipList = textareaValue.value.split('\n');
+
+	const filteredIpList = ipList.filter((ip) => {
+		if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(ip)) {
+			alert(`Некорректный IP: ${ip}`);
+			return;
+		}
+
+		return ip;
+	});
 	
-	const result = await axios.all(ipList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));
+	const result = await axios.all(filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));
 
 	console.log(result);
 };
