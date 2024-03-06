@@ -1,12 +1,12 @@
 <template>
 	<div class="AppHome">
-		<div class="container AppHome__container">
+		<div class="container AppHome__container" v-if="isVisibleTextArea">
 			<form @submit.prevent="handleFormSubmit" class="AppHome__form">
 				<textarea v-model="textareaValue" placeholder="Введите IP адреса"></textarea>
 				<el-button type="primary" native-type="submit">Отправить</el-button>
 			</form>
 		</div>
-		<app-table></app-table>
+		<app-table v-if="!isVisibleTextArea" v-model="ipList"></app-table>
 	</div>
 </template>
 
@@ -15,12 +15,14 @@ import { ref } from 'vue'
 import axios from 'axios'
 import AppTable from '@/components/AppTable.vue';
 
+const isVisibleTextArea = ref(true);
+
+const ipList = ref([]);
+
 const textareaValue = ref('');
 
 const handleFormSubmit = async () => {
-	const ipList = textareaValue.value.split('\n');
-
-	const filteredIpList = ipList.filter((ip) => {
+	const filteredIpList = textareaValue.value.split('\n').filter((ip) => {
 		if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(ip)) {
 			alert(`Некорректный IP: ${ip}`);
 			return;
@@ -31,7 +33,9 @@ const handleFormSubmit = async () => {
 	
 	const result = await axios.all(filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));
 
-	console.log(result);
+	ipList.value = result;
+
+	isVisibleTextArea.value = false;
 };
 </script>
 

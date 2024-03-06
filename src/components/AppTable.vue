@@ -17,7 +17,7 @@
 </template>
 
 <script lang="tsx" setup>
-import { ref, unref } from 'vue'
+import { ref, unref, watch, computed } from 'vue'
 import { ElCheckbox } from 'element-plus'
 
 import type { FunctionalComponent } from 'vue'
@@ -28,6 +28,9 @@ type SelectionCellProps = {
   intermediate?: boolean
   onChange: (value: CheckboxValueType) => void
 }
+
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 const SelectionCell: FunctionalComponent<SelectionCellProps> = ({
   value,
@@ -43,35 +46,26 @@ const SelectionCell: FunctionalComponent<SelectionCellProps> = ({
   )
 }
 
-const generateColumns = (length = 10, prefix = 'column-', props?: any) =>
-  Array.from({ length }).map((_, columnIndex) => ({
-    ...props,
-    key: `${prefix}${columnIndex}`,
-    dataKey: `${prefix}${columnIndex}`,
-    title: `Column ${columnIndex}`,
-    width: 150,
-  }))
-
 const generateData = (
-  columns: ReturnType<typeof generateColumns>,
-  length = 200,
-  prefix = 'row-'
+  columns: ReturnType<typeof columns>,
+  ipList,
 ) =>
-  Array.from({ length }).map((_, rowIndex) => {
+  ipList.map((ip, index) => {
     return columns.reduce(
-      (rowData, column, columnIndex) => {
-        rowData[column.dataKey] = `Row ${rowIndex} - Col ${columnIndex}`
+      (rowData, column) => {
+        rowData[column.dataKey] = ip.data[column.dataKey];
         return rowData
       },
-      {
-        id: `${prefix}${rowIndex}`,
-        checked: false,
-        parentId: null,
-      }
+      {id: `row-${index}`, checked: false, parentId: null}
     )
   })
 
-const columns: Column<any>[] = generateColumns(10)
+const columns: Column<any>[] = [
+  {key: `column-0`, dataKey: 'query', title: `IP`, width: 150},
+  {key: `column-1`, dataKey: 'country', title: `Country`, width: 150},
+  {key: `column-2`, dataKey: 'city', title: `City/Town`, width: 150},
+  {key: `column-3`, dataKey: 'status', title: ``, width: 150},
+]
 columns.unshift({
   key: 'selection',
   width: 50,
@@ -100,8 +94,11 @@ columns.unshift({
   },
 })
 
-const data = ref(generateData(columns, 200))
-console.log()
+const data = ref(generateData(columns, props.modelValue))
+
+watch(() => props.modelValue, (value) => {
+  data.value = generateData(columns, value)
+});
 </script>
 
 <style>
