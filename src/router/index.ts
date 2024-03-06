@@ -14,7 +14,7 @@ const router = createRouter({
       path: '/:query',
       name: 'details',
       component: AppDetails
-    },
+    }
   ]
 })
 

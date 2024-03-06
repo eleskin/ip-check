@@ -6,14 +6,14 @@
 </template>
 
 <script setup lang="ts">
-import AppHeader from '@/components/AppHeader.vue';
+import AppHeader from '@/components/AppHeader.vue'
 </script>
 
 <style>
-  .App {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    height: 100vh;
-    width: 100%;
-  }
+.App {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  width: 100%;
+}
 </style>
