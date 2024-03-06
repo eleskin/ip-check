@@ -4,14 +4,14 @@
       <div class="AppHeader__logo">
         <router-link to="/">IP-PN.COM</router-link>
       </div>
-      <div class="AppHeader__search">
+      <form @submit.prevent="handleSearchIp" class="AppHeader__search">
         <el-input
           v-model="searchValue"
           style="width: 240px"
           placeholder="Type something"
           :prefix-icon="Search"
         />
-      </div>
+      </form>
       <ul class="AppHeader__menu">
         <li class="AppHeader__item">
           <router-link to="">Documentation</router-link>
@@ -30,8 +30,20 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue';
 import { ref } from 'vue'
+import axios from 'axios';
 
 const searchValue = ref('');
+
+const handleSearchIp = async () => {
+  if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(searchValue.value)) {
+		alert(`Некорректный IP: ${searchValue.value}`);
+		return;
+	}
+
+  const result = await axios.get(`http://ip-api.com/json/${searchValue.value}`);
+
+  console.log(result);
+};
 </script>
 
 <style>

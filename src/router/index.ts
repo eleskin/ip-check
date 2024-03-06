@@ -1,4 +1,5 @@
 import AppHome from '@/views/AppHome.vue'
+import AppDetails from '@/views/AppDetails.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -8,6 +9,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: AppHome
+    },
+    {
+      path: '/:query',
+      name: 'details',
+      component: AppDetails
     },
   ]
 })
