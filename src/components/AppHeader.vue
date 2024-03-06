@@ -5,15 +5,14 @@
         <router-link to="/">IP-PN.COM</router-link>
       </div>
       <div class="AppHeader__search">
-        <el-dropdown ref="dropdown1" trigger="contextmenu">
+        <el-dropdown ref="dropdown1">
           <el-input
             v-model="searchValue"
-            style="width: 240px"
             placeholder="Type something"
             :prefix-icon="Search"
             @focus="handleFocusSearch"
           />
-          <template #dropdown>
+          <template #dropdown v-if="isValidIp">
             <el-dropdown-menu style="width: 300px">
               <el-dropdown-item><router-link :to="`/${suggestedIp}`">{{ suggestedIp }}</router-link></el-dropdown-item>
             </el-dropdown-menu>
@@ -43,6 +42,7 @@ import debounce from '@/utils/debounce';
 
 const searchValue = ref('');
 const dropdown1 = ref();
+const isValidIp = ref(false);
 
 const showClick = () => {
   if (!dropdown1.value) return
@@ -63,6 +63,7 @@ watch(
   () => searchValue.value,
   (value) => {
     if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(value)) {
+      isValidIp.value = false;
       return;
     }
 
@@ -70,8 +71,10 @@ watch(
       const result = await axios.get(`http://ip-api.com/json/${value}`);
 
       suggestedIp.value = value;
-      showClick()
       console.log(result.data.query);
+
+      isValidIp.value = true;
+      showClick();
     }, 1000);
 
     debouncedHandle()
@@ -121,5 +124,16 @@ watch(
 .AppHeader__item--bold a {
   color: #0E2E3B;
   font-weight: 600;
+}
+
+.AppHeader__search input {
+  width: 460px;
+  font-size: 16px;
+  padding: 12px 0;
+  height: auto;
+}
+
+.AppHeader__search span::before {
+  opacity: 0;
 }
 </style>

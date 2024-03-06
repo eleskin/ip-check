@@ -22,20 +22,20 @@ const ipList = ref([]);
 const textareaValue = ref('');
 
 const handleFormSubmit = async () => {
-	const filteredIpList = textareaValue.value.split('\n').filter((ip) => {
+	if (!textareaValue.value.trim()) return;
+
+	const filteredIpList = textareaValue.value.trim().split('\n').filter((ip) => {
 		if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(ip)) {
 			alert(`Некорректный IP: ${ip}`);
 			return;
 		}
-
-		return ip;
 	});
 	
 	const result = await axios.all(filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));
 
 	ipList.value = result.map((item) => item.data);
 
-	isVisibleTextArea.value = false;
+	if (ipList.value.length) isVisibleTextArea.value = false;
 };
 </script>
 
@@ -56,5 +56,32 @@ const handleFormSubmit = async () => {
 		width: 100%;
 		height: 112px;
 		resize: none;
+		padding: 12px;
+		font-size: 16px;
 	}
+
+.AppHome__form textarea {
+	border-radius: 4px;
+	border: 1px solid #DADADA;
+}
+
+.AppHome__form textarea::placeholder {
+		color: #8A8A8A;
+}
+
+.AppHome__form button {
+	background-color: #f2f0f0;
+	color: #2C2C2C;
+	font-size: 16px;
+	padding: 12px 20px;
+	height: auto;
+	width: auto;
+	border: none;
+	border-radius: 4px;
+}
+
+.AppHome__form button:hover {
+	background-color: #f2f0f0;
+	color: #2C2C2C;
+}
 </style>
