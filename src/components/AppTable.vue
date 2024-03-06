@@ -115,10 +115,6 @@ const onSort = ({ key, order }: SortBy) => {
   data.value = data.value.reverse()
 }
 
-watch(() => props.modelValue, (value) => {
-  data.value = generateData(columns, value)
-});
-
 watch(() => searchValue.value, (value) => {
   const getSearchResult = () => generateData(columns, props.modelValue).filter((item) => {
     let isExistElement = false;
