@@ -89,7 +89,6 @@ const columns = [
     title: 'IP',
     width: 350,
     cellRenderer: (props: any) => {
-      console.log(props.rowData)
       return (
         <div className="AppTable__cell">
           <div>
@@ -118,7 +117,25 @@ const columns = [
   },
   { key: 'column-1', dataKey: 'country', title: 'Country', width: 250 },
   { key: 'column-2', dataKey: 'city', title: 'City/Town', width: 250 },
-  { key: 'column-3', dataKey: 'status', title: 'Status', width: 100 },
+  {
+    key: 'column-3',
+    dataKey: 'status',
+    title: 'Status',
+    width: 100,
+    cellRenderer: (props: any) => {
+      return (
+        <div>
+          {props.rowData.status === 'success' ? (
+            <img src="/src/assets/icons/check.svg" />
+          ) : props.rowData.status === 'fail' ? (
+            <img src="/src/assets/icons/times.svg" />
+          ) : (
+            <img src="/src/assets/icons/sync.svg" />
+          )}
+        </div>
+      )
+    }
+  },
   { key: 'column-4', dataKey: 'countryCode', title: 'Country code', hidden: true }
 ]
 columns.unshift({
