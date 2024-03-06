@@ -16,8 +16,9 @@ import axios from 'axios'
 const textareaValue = ref('');
 
 const handleFormSubmit = async () => {
-	console.log('Click')
-	const result = await axios.get(`http://ip-api.com/json/${textareaValue.value}`);
+	const ipList = textareaValue.value.split('\n');
+	
+	const result = await axios.all(ipList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));
 
 	console.log(result);
 };
