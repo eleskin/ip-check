@@ -8,8 +8,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
+    ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElTableV2: typeof import('element-plus/es')['ElTableV2']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
