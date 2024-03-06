@@ -11,19 +11,17 @@
         :prefix-icon="Search"
       />
     </div>
-    <div class="AppHeader__menu">
-      <ul>
-        <li>
-          <router-link to="">Documentation</router-link>
-        </li>
-        <li>
-          <router-link to="">Contacts</router-link>
-        </li>
-        <li>
-          <router-link to="">Log in</router-link>
-        </li>
-      </ul>
-    </div> 
+    <ul class="AppHeader__menu">
+      <li class="AppHeader__item">
+        <router-link to="">Documentation</router-link>
+      </li>
+      <li class="AppHeader__item">
+        <router-link to="">Contacts</router-link>
+      </li>
+      <li class="AppHeader__item AppHeader__item--bold">
+        <router-link to="">Log in</router-link>
+      </li>
+    </ul>
   </header>
 </template>
 
@@ -37,5 +35,43 @@ const searchValue = ref('');
 <style>
   .AppHeader {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 20px;
   }
+
+  .AppHeader__logo a {
+    font-weight: 600;
+    font-size: 24px;
+    color: #0e2e3b;
+    text-decoration: none;
+  }
+
+  .AppHeader__menu {
+    display: flex;
+    font-display: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    grid-column-gap: 32px;
+  }
+
+.AppHeader__item a {
+  color: #494949;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.AppHeader__item--bold a {
+  color: #0E2E3B;
+  font-weight: 600;
+}
 </style>
