@@ -1,16 +1,16 @@
 <template>
   <div class="AppHome">
-    <div class="container AppHome__container" v-if="isVisibleTextArea">
-      <form @submit.prevent="handleFormSubmit" class="AppHome__form">
+    <div v-if="isVisibleTextArea" class="container AppHome__container">
+      <form class="AppHome__form" @submit.prevent="handleFormSubmit">
         <textarea v-model="textareaValue" placeholder="Введите IP адреса"></textarea>
-        <el-button type="primary" native-type="submit">Отправить</el-button>
+        <el-button native-type="submit" type="primary">Отправить</el-button>
       </form>
     </div>
-    <app-table v-if="!isVisibleTextArea" v-model="ipList"></app-table>
+    <app-table v-if="!isVisibleTextArea" v-model="ipList" v-model:hidden="isVisibleTextArea"></app-table>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue'
 import axios from 'axios'
 import AppTable from '@/components/AppTable.vue'
@@ -23,7 +23,6 @@ const textareaValue = ref('')
 
 const handleFormSubmit = async () => {
   if (!textareaValue.value.trim()) return
-  console.log(textareaValue.value.trim())
 
   const filteredIpList = textareaValue.value
     .trim()
@@ -37,68 +36,68 @@ const handleFormSubmit = async () => {
       return ip
     })
 
-  let timeout = 0
-  const getInfo = () => {
-    Promise.all(filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)))
-      .then((responses) => {
-        ipList.value = responses.map((item) => item.data)
-      })
-      .catch((error) => {
-        if (error.response.status === 429) {
-          timeout += 10000
-          setTimeout(getInfo, timeout)
-        }
-      })
+  const getInfo = async () => {
+    for (let ip of filteredIpList) {
+      try {
+        const response = await axios.get(`http://ip-api.com/json/${ip}`)
+
+        ipList.value = [...ipList.value, response.data]
+      } catch (error) {
+        console.error('Error making request:', error)
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+      textareaValue.value = '';
+    }
   }
 
-  getInfo()
+  await getInfo()
   if (filteredIpList.length) isVisibleTextArea.value = false
 }
 </script>
 
 <style>
 .AppHome {
-  padding: 80px 0 20px 0;
+	padding: 80px 0 20px 0;
 }
 
 .AppHome__form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  grid-row-gap: 20px;
+	align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+	grid-row-gap: 20px;
 }
 
 .AppHome__form textarea {
-  max-width: 620px;
-  width: 100%;
-  height: 112px;
-  resize: none;
-  padding: 12px;
-  font-size: 16px;
+	font-size: 16px;
+	height: 112px;
+	max-width: 620px;
+	padding: 12px;
+	resize: none;
+	width: 100%;
 }
 
 .AppHome__form textarea {
-  border-radius: 4px;
-  border: 1px solid #dadada;
+	border: 1px solid #dadada;
+	border-radius: 4px;
 }
 
 .AppHome__form textarea::placeholder {
-  color: #8a8a8a;
+	color: #8a8a8a;
 }
 
 .AppHome__form button {
-  background-color: #f2f0f0;
-  color: #2c2c2c;
-  font-size: 16px;
-  padding: 12px 20px;
-  height: auto;
-  width: auto;
-  border: none;
-  border-radius: 4px;
+	background-color: #f2f0f0;
+	border: none;
+	border-radius: 4px;
+	color: #2c2c2c;
+	font-size: 16px;
+	height: auto;
+	padding: 12px 20px;
+	width: auto;
 }
 
 .AppHome__form button:hover {
-  background-color: #f2f0f0;
-  color: #2c2c2c;
+	background-color: #f2f0f0;
+	color: #2c2c2c;
 }
 </style>

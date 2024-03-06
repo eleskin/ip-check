@@ -44,7 +44,4 @@ if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(String(route.params.quer
   grid-gap: 20px;
   grid-template-columns: repeat(4, 1fr);
 }
-
-.AppDetails__container {
-}
 </style>

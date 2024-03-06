@@ -28,6 +28,7 @@
 <script lang="tsx" setup>
 import { ref, unref, watch } from 'vue'
 import { TableV2SortOrder, ElButton, ElCheckbox } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
 
 const searchValue = ref('')
 
@@ -35,8 +36,17 @@ const checkedRows = ref([])
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
+const hidden = defineModel('hidden');
 
-const SelectionCell = ({ value, intermediate = false, onChange }) => {
+const SelectionCell = ({
+  value,
+  intermediate = false,
+  onChange
+}: {
+  value: string
+  intermediate: boolean
+  onChange: () => void
+}) => {
   return <ElCheckbox onChange={onChange} modelValue={value} indeterminate={intermediate} />
 }
 
@@ -46,16 +56,17 @@ const handleClickDelete = () => {
     'update:modelValue',
     getSearchResult(
       searchValue.value,
-      props.modelValue.filter((item) => !checkedRows.value.includes(item.query))
+      props.modelValue.filter((item: any) => !checkedRows.value.includes(item.query))
     )
   )
   data.value = getSearchResult(searchValue.value, data.value)
+  hidden.value = true;
 }
 
-const generateData = (columns, ipList) =>
-  ipList.map((ip, index) => {
+const generateData = (columns: any, ipList: any) =>
+  ipList.map((ip: string, index: number) => {
     return columns.reduce(
-      (rowData, column) => {
+      (rowData: any, column: any) => {
         if (column.dataKey) {
           rowData[column.dataKey] = ip[column.dataKey]
         }
@@ -142,20 +153,20 @@ columns.unshift({
   key: 'selection',
   width: 50,
   cellRenderer: ({ rowData }) => {
-    const onChange = (value) => (rowData.checked = value)
+    const onChange = (value: boolean) => (rowData.checked = value)
     return <SelectionCell value={rowData.checked} onChange={onChange} />
   },
 
   headerCellRenderer: () => {
     const _data = unref(data)
-    const onChange = (value) =>
-      (data.value = _data.map((row) => {
+    const onChange = (value: boolean) =>
+      (data.value = _data.map((row: any) => {
         row.checked = value
         return row
       }))
-    const allSelected = _data.every((row) => row.checked)
-    const containsChecked = _data.some((row) => row.checked)
-    checkedRows.value = _data.filter((item) => item.checked).map((item) => item.query)
+    const allSelected = _data.every((row: any) => row.checked)
+    const containsChecked = _data.some((row: any) => row.checked)
+    checkedRows.value = _data.filter((item: any) => item.checked).map((item: any) => item.query)
 
     return (
       <SelectionCell
@@ -174,19 +185,19 @@ columns[2].sortable = true
 columns[3].sortable = true
 columns[4].sortable = true
 
-const sortState = ref<SortState>({
+const sortState = ref({
   'column-0': TableV2SortOrder.ASC,
   'column-1': TableV2SortOrder.ASC,
   'column-2': TableV2SortOrder.ASC,
   'column-3': TableV2SortOrder.ASC
 })
 
-const onSort = ({ key, order }: SortBy) => {
+const onSort = ({ key, order }) => {
   sortState.value[key] = order
   data.value = data.value.reverse()
 }
 
-const getSearchResult = (value, rows) =>
+const getSearchResult = (value: string, rows: any) =>
   generateData(columns, rows).filter((item) => {
     let isExistElement = false
 

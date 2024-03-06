@@ -42,13 +42,13 @@
 import { Search } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import axios from 'axios'
-import debounce from '@/utils/debounce.ts'
+import debounce from '@/utils/debounce'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
 
-const searchValue = ref(route.query.ip)
+const searchValue = ref<string>(String(route.query.ip ?? ''))
 const dropdown1 = ref()
 const isValidIp = ref(false)
 
@@ -69,12 +69,12 @@ const handleFocusSearch = () => {
 
 watch(
   () => route.query.ip,
-  (value) => (searchValue.value = value)
+  (value) => (searchValue.value = String(value ?? ''))
 )
 
 watch(
   () => searchValue.value,
-  (value) => {
+  (value: string) => {
     if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(value)) {
       isValidIp.value = false
       return
@@ -122,7 +122,7 @@ watch(
 
 .AppHeader__menu {
   display: flex;
-  font-display: row;
+  flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   padding: 0;
