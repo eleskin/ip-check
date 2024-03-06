@@ -33,7 +33,7 @@ const handleFormSubmit = async () => {
 	
 	const result = await axios.all(filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`)));
 
-	ipList.value = result;
+	ipList.value = result.map((item) => item.data);
 
 	isVisibleTextArea.value = false;
 };

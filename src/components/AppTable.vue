@@ -7,6 +7,7 @@
           placeholder="Поиск по таблице..."
           :prefix-icon="Search"
         />
+        <el-button v-if="checkedRows.length" @click="handleClickDelete">Удалить выбранные</el-button>
       <el-auto-resizer>
         <template #default="{ height, width }">
           <el-table-v2
@@ -28,7 +29,9 @@
 import { ref, unref, watch } from 'vue'
 import { TableV2SortOrder, ElCheckbox } from 'element-plus'
 
-const searchValue = ref('')
+const searchValue = ref('');
+
+const checkedRows = ref([]);
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -47,6 +50,10 @@ const SelectionCell = ({
   )
 }
 
+const handleClickDelete = () => {
+  emit('update:modelValue', getSearchResult(searchValue.value, data.value.filter((item) => !checkedRows.value.includes(item.id))))
+};
+
 const generateData = (
   columns,
   ipList,
@@ -54,7 +61,9 @@ const generateData = (
   ipList.map((ip, index) => {
     return columns.reduce(
       (rowData, column) => {
-        rowData[column.dataKey] = ip.data[column.dataKey];
+        if (column.dataKey) {
+          rowData[column.dataKey] = ip[column.dataKey];
+        }
         return rowData
       },
       {id: `row-${index}`, checked: false, parentId: null}
@@ -62,10 +71,10 @@ const generateData = (
   })
 
 const columns = [
-  {key: 'column-0', dataKey: 'query', title: 'IP', width: 150},
-  {key: 'column-1', dataKey: 'country', title: 'Country', width: 150},
-  {key: 'column-2', dataKey: 'city', title: 'City/Town', width: 150},
-  {key: 'column-3', dataKey: 'status', title: 'Status', width: 150},
+  {key: 'column-0', dataKey: 'query', title: 'IP', width: 250},
+  {key: 'column-1', dataKey: 'country', title: 'Country', width: 250},
+  {key: 'column-2', dataKey: 'city', title: 'City/Town', width: 250},
+  {key: 'column-3', dataKey: 'status', title: 'Status', width: 100},
 ]
 columns.unshift({
   key: 'selection',
@@ -84,6 +93,7 @@ columns.unshift({
       }))
     const allSelected = _data.every((row) => row.checked)
     const containsChecked = _data.some((row) => row.checked)
+    checkedRows.value = _data.filter((item) => item.checked).map((item) => item.id);
 
     return (
       <SelectionCell
@@ -115,8 +125,7 @@ const onSort = ({ key, order }: SortBy) => {
   data.value = data.value.reverse()
 }
 
-watch(() => searchValue.value, (value) => {
-  const getSearchResult = () => generateData(columns, props.modelValue).filter((item) => {
+const getSearchResult = (value, rows) => generateData(columns, rows).filter((item) => {
     let isExistElement = false;
 
     Object.values(item).forEach((field) => {
@@ -130,7 +139,10 @@ watch(() => searchValue.value, (value) => {
     return isExistElement;
   });
 
-  data.value = getSearchResult()
+watch(() => props.modelValue, (value) => data.value = value);
+
+watch(() => searchValue.value, (value) => {
+  data.value = getSearchResult(value, props.modelValue)
 });
 </script>
 
