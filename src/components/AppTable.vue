@@ -89,10 +89,13 @@ const columns = [
     title: 'IP',
     width: 350,
     cellRenderer: (props: any) => {
-      console.log(props.rowData.query)
+      console.log(props.rowData)
       return (
         <div className="AppTable__cell">
-          <span>{props.rowData.query}</span>
+          <div>
+            <span class={`fi fi-${props.rowData.countryCode.toLowerCase()}`}></span>
+            <span>{props.rowData.query}</span>
+          </div>
           <div>
             <ElButton
               size="small"
@@ -115,7 +118,8 @@ const columns = [
   },
   { key: 'column-1', dataKey: 'country', title: 'Country', width: 250 },
   { key: 'column-2', dataKey: 'city', title: 'City/Town', width: 250 },
-  { key: 'column-3', dataKey: 'status', title: 'Status', width: 100 }
+  { key: 'column-3', dataKey: 'status', title: 'Status', width: 100 },
+  { key: 'column-4', dataKey: 'countryCode', title: 'Country code', hidden: true }
 ]
 columns.unshift({
   key: 'selection',
@@ -203,5 +207,12 @@ watch(
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.AppTable__cell div {
+  display: flex;
+  justify-content: space-between;
+  grid-column-gap: 4px;
+  align-items: center;
 }
 </style>
