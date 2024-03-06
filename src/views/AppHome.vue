@@ -2,7 +2,7 @@
 	<div class="AppHome">
 		<div class="container AppHome__container">
 			<form @submit.prevent="handleFormSubmit" class="AppHome__form">
-				<textarea placeholder="Введите IP адреса"></textarea>
+				<textarea v-model="textareaValue" placeholder="Введите IP адреса"></textarea>
 				<el-button type="primary" native-type="submit">Отправить</el-button>
 			</form>
 		</div>
@@ -10,8 +10,16 @@
 </template>
 
 <script setup lang="ts">
-const handleFormSubmit = () => {
+import { ref } from 'vue'
+import axios from 'axios'
+
+const textareaValue = ref('');
+
+const handleFormSubmit = async () => {
 	console.log('Click')
+	const result = await axios.get(`http://ip-api.com/json/${textareaValue.value}`);
+
+	console.log(result);
 };
 </script>
 
