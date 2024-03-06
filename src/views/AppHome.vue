@@ -15,11 +15,9 @@ import { ref } from 'vue'
 import axios from 'axios'
 import AppTable from '@/components/AppTable.vue'
 
-const MAX_CONCURRENT_REQUESTS = 10
-
 const isVisibleTextArea = ref(true)
 
-const ipList = ref([])
+const ipList = ref<string[]>([])
 
 const textareaValue = ref('')
 
