@@ -14,6 +14,15 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import AppTable from '@/components/AppTable.vue'
+import { ConcurrencyManager } from 'axios-concurrency'
+
+const api = axios.create({
+  baseURL: 'http://ip-api.com'
+})
+
+const MAX_CONCURRENT_REQUESTS = 10
+
+const manager = ConcurrencyManager(api, MAX_CONCURRENT_REQUESTS)
 
 const isVisibleTextArea = ref(true)
 
@@ -37,13 +46,22 @@ const handleFormSubmit = async () => {
       return ip
     })
 
-  const result = await axios.all(
-    filteredIpList.map((ip) => axios.get(`http://ip-api.com/json/${ip}`))
-  )
+  let timeout = 0
+  const getInfo = () => {
+    Promise.all(filteredIpList.map((ip) => api.get(`/json/${ip}`)))
+      .then((responses) => {
+        ipList.value = responses.map((item) => item.data)
+      })
+      .catch((error) => {
+        if (error.response.status === 429) {
+          timeout += 10000
+          setTimeout(getInfo, timeout)
+        }
+      })
+  }
 
-  ipList.value = result.map((item) => item.data)
-
-  if (ipList.value.length) isVisibleTextArea.value = false
+  getInfo()
+  if (filteredIpList.length) isVisibleTextArea.value = false
 }
 </script>
 
