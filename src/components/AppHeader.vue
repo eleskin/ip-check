@@ -43,8 +43,12 @@ import { Search } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import axios from 'axios'
 import debounce from '@/utils/debounce.ts'
+import { useRouter, useRoute } from 'vue-router'
 
-const searchValue = ref('')
+const router = useRouter()
+const route = useRoute()
+
+const searchValue = ref(route.query.ip)
 const dropdown1 = ref()
 const isValidIp = ref(false)
 
@@ -64,12 +68,21 @@ const handleFocusSearch = () => {
 }
 
 watch(
+  () => route.query.ip,
+  (value) => (searchValue.value = value)
+)
+
+watch(
   () => searchValue.value,
   (value) => {
     if (!/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(value)) {
       isValidIp.value = false
       return
     }
+
+    const path = route.fullPath.split('?')[0]
+
+    router.push(`${path}?ip=${value}`)
 
     const debouncedHandle = debounce(async () => {
       const result = await axios.get(`http://ip-api.com/json/${value}`)
